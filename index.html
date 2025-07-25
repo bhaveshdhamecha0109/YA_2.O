@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YA 2.0 Workshop Agenda</title>
+    <!-- Tailwind CSS CDN for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font: Inter for a clean, modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Apply Inter font family to the body */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f9ff; /* Very light blue background for a fresh feel */
+        }
+        /* Styling for each agenda card/section */
+        .agenda-card {
+            background-color: #ffffff; /* White background for cards */
+            border-radius: 12px; /* Rounded corners for a softer look */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08); /* Subtle shadow for depth */
+            overflow: hidden; /* Ensures content stays within rounded corners */
+            margin-bottom: 1.5rem; /* Space between cards */
+            transition: transform 0.2s ease-in-out; /* Smooth transition on hover */
+        }
+        .agenda-card:hover {
+            transform: translateY(-5px); /* Slight lift on hover */
+        }
+        /* Header for each collapsible section */
+        .agenda-header {
+            cursor: pointer; /* Indicates it's clickable */
+            padding: 1.5rem; /* Ample padding */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 700; /* Bold text for emphasis */
+            font-size: 1.25rem; /* Larger font size */
+            color: #1a202c; /* Dark text for readability */
+            background-color: #bfdbfe; /* Light blue header background */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth color transitions */
+            border-bottom: 2px solid transparent; /* Placeholder for active border */
+        }
+        .agenda-header:hover {
+            background-color: #93c5fd; /* Darker blue on hover */
+            color: #1e40af; /* Darker text on hover */
+        }
+        /* Styling for the content area that expands/collapses */
+        .agenda-content {
+            padding: 0 1.5rem; /* Padding applied when expanded */
+            max-height: 0; /* Initially hidden */
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out; /* Smooth expansion/collapse */
+            background-color: #f8fafc; /* Slightly off-white background for content */
+        }
+        .agenda-content.expanded {
+            max-height: 500px; /* Max height for expanded content - adjust if you have very long sections */
+            padding: 1.5rem; /* Restore padding when expanded */
+            transition: max-height 0.5s ease-in, padding 0.5s ease-in; /* Smooth transition */
+        }
+        /* Styling for individual items within a section */
+        .agenda-item {
+            display: flex;
+            align-items: flex-start; /* Align items to the top */
+            margin-bottom: 1rem;
+            padding-left: 1rem; /* Indent for visual hierarchy */
+            border-left: 4px solid #38b2ac; /* Teal accent bar */
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+        }
+        .agenda-item:last-child {
+            margin-bottom: 0; /* No margin after the last item */
+        }
+        /* Styling for the time of an agenda item */
+        .item-time {
+            font-weight: 600; /* Semi-bold */
+            color: #0d706a; /* Darker teal color */
+            min-width: 6rem; /* Ensures consistent alignment of times */
+            flex-shrink: 0; /* Prevents shrinking */
+        }
+        /* Styling for the details of an agenda item */
+        .item-details {
+            flex-grow: 1; /* Takes up remaining space */
+            padding-left: 1rem; /* Space between time and details */
+            color: #4a5568; /* Grey text */
+        }
+        /* Styling for the title of an agenda item */
+        .item-title {
+            font-weight: 700; /* Bold title */
+            color: #2d3748; /* Darker grey for titles */
+            margin-bottom: 0.25rem;
+        }
+        /* Styling for the description of an agenda item */
+        .item-description {
+            font-size: 0.95rem; /* Slightly smaller font for description */
+            color: #718096; /* Lighter grey for descriptions */
+            line-height: 1.4;
+        }
+        /* Arrow icon styling for collapse/expand */
+        .arrow-icon {
+            transition: transform 0.3s ease; /* Smooth rotation transition */
+            flex-shrink: 0; /* Prevents shrinking */
+        }
+        .arrow-icon.rotate {
+            transform: rotate(90deg); /* Rotates icon when expanded */
+        }
+        /* Special styling for the lunch break section */
+        .lunch-card {
+            background-color: #ecfdf5; /* Light green background */
+            color: #065f46; /* Dark green text */
+            font-weight: 800; /* Extra bold */
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+        /* Special styling for the vote of thanks section */
+        .thanks-card {
+            background-color: #f3e8ff; /* Light purple background */
+            color: #5b21b6; /* Dark purple text */
+            font-weight: 800;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .agenda-header {
+                font-size: 1.1rem;
+                padding: 1rem;
+            }
+            .agenda-item {
+                flex-direction: column; /* Stack time and details on small screens */
+                padding-left: 0;
+                border-left: none;
+            }
+            .item-time {
+                min-width: unset;
+                margin-bottom: 0.25rem;
+            }
+            .item-details {
+                padding-left: 0.5rem;
+            }
+            .lunch-card, .thanks-card {
+                font-size: 1.2rem;
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6">
+
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6 sm:p-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-center text-blue-700 mb-4 sm:mb-6 leading-tight">
+            ✨ Young Adults (YA) 2.0 ✨
+        </h1>
+        <p class="text-center text-gray-600 mb-6 sm:mb-8 text-base sm:text-lg">
+            Welcome to an inspiring day of connection, learning, and planning! We're thrilled to have you here.
+        </p>
+
+        <!-- Time Block 1: Setting the Stage -->
+        <div class="agenda-card">
+            <div class="agenda-header" onclick="toggleAgenda(this)">
+                <span>⏰ 11:00 AM - 12:00 PM: Setting the Stage</span>
+                <!-- SVG Icon for the arrow -->
+                <svg class="arrow-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </div>
+            <div class="agenda-content">
+                <div class="agenda-item">
+                    <span class="item-time">11:00 AM</span>
+                    <div class="item-details">
+                        <div class="item-title">🎤 Welcome Address</div>
+                        <div class="item-description">By Host Centre Incharge. Kick-off with enthusiasm and a warm welcome!</div>
+                    </div>
+                </div>
+                <div class="agenda-item">
+                    <span class="item-time">11:15 AM</span>
+                    <div class="item-details">
+                        <div class="item-title">🚀 Encouraging Words</div>
+                        <div class="item-description">By Zone Incharge. Gear up for motivating insights and positive vibes!</div>
+                    </div>
+                </div>
+                <div class="agenda-item">
+                    <span class="item-time">11:30 AM</span>
+                    <div class="item-details">
+                        <div class="item-title">👋 Icebreaker Activity: "Connect & Share"</div>
+                        <div class="item-description">Let's break the ice and make new connections in a fun way!</div>
+                    </div>
+                </div>
+                <div class="agenda-item">
+                    <span class="item-time">11:45 AM</span>
+                    <div class="item-details">
+                        <div class="item-title">🙏 Inspiring Words</div>
+                        <div class="item-description">By YA Mentor. Gain wisdom and inspiration for your YA journey!</div>
+                    </div>
+                </div>
+                <div class="agenda-item">
+                    <span class="item-time">11:55 AM</span>
+                    <div class="item-details">
+                        <div class="item-title">🌐 Opening Words</div>
+                        <div class="item-description">By Zonal Regional Coordinator. Hear the vision for our collective growth in YA 2.0!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Time Block 2: Visioning & Future Forward -->
+        <div class="agenda-card">
+            <div class="agenda-header" onclick="toggleAgenda(this)">
+                <span>💡 12:00 PM - 1:00 PM: Visioning & Future Forward</span>
+                <svg class="arrow-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </div>
+            <div class="agenda-content">
+                <div class="agenda-item">
+                    <span class="item-time">12:00 PM</span>
+                    <div class="item-details">
+                        <div class="item-title">🎯 Mission & Vision of YA 2.0: "Our North Star"</div>
+                        <div class="item-description">Understand the core purpose and aspirations of YA 2.0. Your input is vital!</div>
+                    </div>
+                </div>
+                <div class="agenda-item">
+                    <span class="item-time">12:30 PM</span>
+                    <div class="item-details">
+                        <div class="item-title">📈 Zone Working & Planning of Future Activities: "Charting Our Course"</div>
+                        <div class="item-description">Collaborate on current initiatives and brainstorm exciting plans ahead!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Time Block 3: Impact & Enjoyment -->
+        <div class="agenda-card">
+            <div class="agenda-header" onclick="toggleAgenda(this)">
+                <span>🤝 1:00 PM - 2:30 PM: Impact & Enjoyment</span>
+                <svg class="arrow-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </div>
+            <div class="agenda-content">
+                <div class="agenda-item">
+                    <span class="item-time">1:00 PM</span>
+                    <div class="item-details">
+                        <div class="item-title">🌱 Discussion on Sewa Areas of Young Adults: "Making an Impact Together"</div>
+                        <div class="item-description">Engage in a heartfelt discussion about meaningful service opportunities.</div>
+                    </div>
+                </div>
+                <div class="agenda-item">
+                    <span class="item-time">2:00 PM</span>
+                    <div class="item-details">
+                        <div class="item-title">🎉 Fun Group Activity: "Team Challenge!"</div>
+                        <div class="item-description">Unwind with an engaging activity designed for teamwork and laughter!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lunch Break (non-interactive, distinct styling) -->
+        <div class="lunch-card">
+            <span class="mr-2">🍽️</span> 2:30 PM - 3:15 PM: Lunch Break <span class="ml-2">🥗</span>
+        </div>
+        <p class="text-center text-gray-700 mb-6 sm:mb-8 text-base">Recharge and connect with fellow participants over a delicious meal!</p>
+
+        <!-- Time Block 4: Collaborative Deep Dive -->
+        <div class="agenda-card">
+            <div class="agenda-header" onclick="toggleAgenda(this)">
+                <span>🗣️ 3:15 PM - 3:45 PM: Collaborative Deep Dive</span>
+                <svg class="arrow-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </div>
+            <div class="agenda-content">
+                <div class="agenda-item">
+                    <span class="item-time">3:15 PM</span>
+                    <div class="item-details">
+                        <div class="item-title">🔄 Group Discussion with Sector & Center Coordinators: "Aligning Our Efforts"</div>
+                        <div class="item-description">Directly share insights and strategize with our coordinators.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Time Block 5: Special Dedication -->
+        <div class="agenda-card">
+            <div class="agenda-header" onclick="toggleAgenda(this)">
+                <span>✨ 3:45 PM - 4:00 PM: Masters Day Special Activity</span>
+                <svg class="arrow-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </div>
+            <div class="agenda-content">
+                <div class="agenda-item">
+                    <span class="item-time">3:45 PM</span>
+                    <div class="item-details">
+                        <div class="item-title">🌟 A Moment of Reflection</div>
+                        <div class="item-description">A unique activity to honor and celebrate the significance of Masters Day.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vote of Thanks (non-interactive, distinct styling) -->
+        <div class="thanks-card">
+            <span class="mr-2">🙏</span> 4:00 PM - 4:15 PM: Vote of Thanks <span class="ml-2">🌸</span>
+        </div>
+        <p class="text-center text-gray-700 text-base">A sincere thank you to everyone for making this day a success!</p>
+
+    </div>
+
+    <script>
+        // JavaScript function to toggle the visibility of agenda content
+        function toggleAgenda(headerElement) {
+            const content = headerElement.nextElementSibling; // Get the content div following the header
+            const arrowIcon = headerElement.querySelector('.arrow-icon'); // Get the arrow SVG icon
+
+            // Check if the content is currently expanded
+            if (content.classList.contains('expanded')) {
+                // If expanded, collapse it
+                content.classList.remove('expanded');
+                arrowIcon.classList.remove('rotate'); // Rotate arrow back
+            } else {
+                // If not expanded, first collapse any other open sections
+                document.querySelectorAll('.agenda-content.expanded').forEach(item => {
+                    item.classList.remove('expanded');
+                    item.previousElementSibling.querySelector('.arrow-icon').classList.remove('rotate');
+                });
+                // Then, expand the clicked section
+                content.classList.add('expanded');
+                arrowIcon.classList.add('rotate'); // Rotate arrow
+            }
+        }
+
+        // Automatically expand the first section when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const firstHeader = document.querySelector('.agenda-header');
+            if (firstHeader) {
+                toggleAgenda(firstHeader); // Call toggle to expand the first section
+            }
+        });
+    </script>
+</body>
+</html>
